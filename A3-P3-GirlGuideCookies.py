@@ -6,13 +6,63 @@
 
 import ds_tower1_3_0 as tower
 
+class Guide:
+    def __init__(self, name:str, sales:int):
+        self.name = name
+        self.sales = sales
+        self.prize = ""
+
 def main():
     # Local variables
-    guideCount = getGuideCount()
-    print(guideCount)
     title = "Girl Guide Cookie Sell-Off"
+    avgOut = "The average number of boxes sold by {0} girl scouts is: {1}"
 
     print(tower.Template.titleOut(title))
+    guideCount = getGuideCount()
+    guides = getNamesAndSales(guideCount)
+
+    averageSales = getAverage(getSum(guides), len(guides))
+    prizes = getPrizes()
+    guides = assignPrizes(guides, prizes, averageSales)
+
+    print(avgOut.format(guideCount, averageSales))
+
+def assignPrizes(guides, prizes, average):
+    """ Assigns prizes to guides based on sales """
+    max = 0
+
+    # Assign all prizes except the first place prize first, then loop again and overwrite the highest sales number with the first place prize
+    for g in guides:
+        if g.sales > max: # Figure out what the highest sales number is 
+            max = g.sales
+
+        if g.sales > average: # Assign second and third place prizes 
+            g.prize = prizes[1]
+        elif g.sales >= 1:
+            g.prize = prizes[2]
+
+    for g in guides: # Assign first place prize
+        if g.sales == max:
+            g.prize = prizes[0]
+        
+    return guides
+
+def getPrizes():
+    return [ "Girl Guide Jamboree", 
+            "Super Seller Badge", 
+            "Leftover Cookies" ]
+
+def getSum(guides):
+    """ Returns the sum of all sales """
+    sum = 0
+    for g in guides:
+        sum += g.sales
+
+    return sum
+
+def getAverage(sum, len):
+    """ Returns the average """
+    return sum / len
 
 def getGuideCount():
     """ Returns the number of guides participating in the cookie sell-off """
@@ -24,6 +74,33 @@ def getGuideCount():
         print("Invalid input. Please enter the number of guides selling cookies.")
 
     return guideCount
+
+def getNamesAndSales(guideCount:int):
+    guides = []
+    for i in range(guideCount):
+        name = getName(i)
+        sales = getSales(name)
+        guides.append(Guide(name, sales))
+
+    return guides
+
+def getName(currentGuide:int):
+    """ Returns the name of a guide """
+    instr = "Enter the name of the guide #{0}"
+
+    print(instr.format(currentGuide + 1))
+    name = input(tower.PROMPT) # No validation on this string because we do not live in a world where we can assume all names are only letters
+    
+    return name
+
+def getSales(name:str):
+    """ Returns the number of boxes sold by a guide """
+    instr = "Enter the number of boxes sold by {0}"
+
+    print(instr.format(name))
+    sales = tower.Validator.inputAndValidateInt(tower.PROMPT)
+
+    return sales
 
 if __name__ == "__main__":
     main()
