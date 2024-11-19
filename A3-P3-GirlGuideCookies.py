@@ -28,16 +28,16 @@ def main():
     print(avgOut.format(guideCount, averageSales))
     outputResults(guides)
 
-def outputResults(guides):
+def outputResults(guides:list[Guide]):
     """ Outputs the results of the cookie sell-off """
 
-    print(f"\n{'Guide':<20}{'Sales':<20}{'Prize':<20}") # NOTE These fun little print formatting rules are cool. 
+    print(f"\n{'Guide':<20}{'Sales':<20}{'Prize':<20}") # NOTE These fun little print formatting rules are real cool. 
     print(tower.Template.getLine("-"))
 
     for g in guides:
         print(f"{g.name:<20}{g.sales:<20}{g.prize:<20}")
 
-def assignPrizes(guides, prizes, average):
+def assignPrizes(guides:list[Guide], prizes:list[str], average:float):
     """ Assigns prizes to guides based on sales """
     max = 0
 
@@ -60,12 +60,11 @@ def assignPrizes(guides, prizes, average):
 
 def getPrizes():
     """ Returns the list of prizes in descending order """
-
-    return [ "Girl Guide Jamboree", 
+    return [ "Trip to Girl Guide Jamboree in Aruba!", 
             "Super Seller Badge", 
             "Leftover Cookies" ]
 
-def getSum(guides):
+def getSum(guides:list[Guide]):
     """ Returns the sum of all sales """
     sum = 0
     for g in guides:
@@ -73,7 +72,7 @@ def getSum(guides):
 
     return sum
 
-def getAverage(sum, len):
+def getAverage(sum:int, len:int):
     """ Returns the average """
     return sum / len
 
@@ -93,6 +92,7 @@ def getGuideCount():
     return guideCount
 
 def getNamesAndSales(guideCount:int):
+    """ Returns a list of guide objects containing their name and sales number """
     guides = []
     for i in range(guideCount):
         name = getName(i)
