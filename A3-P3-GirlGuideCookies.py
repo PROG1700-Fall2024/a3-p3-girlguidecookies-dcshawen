@@ -26,11 +26,22 @@ def main():
     guides = assignPrizes(guides, prizes, averageSales)
 
     print(avgOut.format(guideCount, averageSales))
+    outputResults(guides)
+
+def outputResults(guides):
+    """ Outputs the results of the cookie sell-off """
+
+    print(f"\n{'Guide':<20}{'Sales':<20}{'Prize':<20}") # NOTE These fun little print formatting rules are cool. 
+    print(tower.Template.getLine("-"))
+
+    for g in guides:
+        print(f"{g.name:<20}{g.sales:<20}{g.prize:<20}")
 
 def assignPrizes(guides, prizes, average):
     """ Assigns prizes to guides based on sales """
     max = 0
 
+    # NOTE I don't like these loops. It feels clunky. I don't know if I'll get a chance to rewrite it, but just know I do not like this logic structure. 
     # Assign all prizes except the first place prize first, then loop again and overwrite the highest sales number with the first place prize
     for g in guides:
         if g.sales > max: # Figure out what the highest sales number is 
@@ -48,6 +59,8 @@ def assignPrizes(guides, prizes, average):
     return guides
 
 def getPrizes():
+    """ Returns the list of prizes in descending order """
+
     return [ "Girl Guide Jamboree", 
             "Super Seller Badge", 
             "Leftover Cookies" ]
@@ -71,6 +84,10 @@ def getGuideCount():
     print(instr)
 
     while (guideCount := tower.Validator.validateInt(input(tower.PROMPT))) == None or guideCount <= 0:
+        if guideCount == 0:
+            print("Then why are you even here?")
+            exit() # End the program if no guides participated
+
         print("Invalid input. Please enter the number of guides selling cookies.")
 
     return guideCount
@@ -98,7 +115,9 @@ def getSales(name:str):
     instr = "Enter the number of boxes sold by {0}"
 
     print(instr.format(name))
-    sales = tower.Validator.inputAndValidateInt(tower.PROMPT)
+
+    while (sales := tower.Validator.validateInt(input(tower.PROMPT))) == None or sales < 0:
+        print("Invalid input. Please enter a number equal to, or greater than, 0.")
 
     return sales
 
